@@ -4,7 +4,7 @@ A Node.js/Express + MongoDB backend for managing users, role requests, and finan
 
 
 > ## Important for Evaluators
-> Please read **[ASSUMPTIONS.md](./assumption.md) first** before
+> Please read **[ASSUMPTIONS.md](./assumptions.md) first** before
 > exploring the codebase or testing the APIs.
 >
 > It contains:
