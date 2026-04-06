@@ -1,0 +1,382 @@
+const swaggerSpec = {
+  openapi: '3.0.0',
+  info: {
+    title: 'Backend Assignment API',
+    version: '1.0.0',
+    description: 'API documentation for the backend assignment project',
+  },
+  servers: [
+    {
+      url: '/api',
+    },
+  ],
+  paths: {
+    // Auth
+    '/auth/register': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Register a new user',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['name', 'email', 'password'],
+                properties: {
+                  name: { type: 'string' },
+                  email: { type: 'string', format: 'email' },
+                  password: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          201: { description: 'User registered successfully' },
+          400: { description: 'Validation error' },
+        },
+      },
+    },
+    '/auth/login': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Login with email and password',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['email', 'password'],
+                properties: {
+                  email: { type: 'string', format: 'email' },
+                  password: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Logged in successfully' },
+          400: { description: 'Validation error' },
+          401: { description: 'Invalid credentials' },
+        },
+      },
+    },
+    '/auth/logout': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Logout current user',
+        responses: {
+          200: { description: 'Logged out successfully' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+
+    // Users
+    '/users': {
+      get: {
+        tags: ['Users'],
+        summary: 'Get list of users (admin only)',
+        responses: {
+          200: { description: 'List of users' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/users/{id}/role': {
+      patch: {
+        tags: ['Users'],
+        summary: 'Update user role (admin only)',
+        parameters: [
+          {
+            in: 'path',
+            name: 'id',
+            required: true,
+            schema: { type: 'string' },
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  role: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Role updated' },
+          400: { description: 'Validation error' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/users/{id}/status': {
+      patch: {
+        tags: ['Users'],
+        summary: 'Update user status (admin only)',
+        parameters: [
+          {
+            in: 'path',
+            name: 'id',
+            required: true,
+            schema: { type: 'string' },
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  status: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Status updated' },
+          400: { description: 'Validation error' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+
+    // Transactions
+    '/transactions': {
+      post: {
+        tags: ['Transactions'],
+        summary: 'Create a new transaction (admin only)',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['amount', 'type', 'category', 'date'],
+                properties: {
+                  amount: { type: 'number' },
+                  type: { type: 'string', enum: ['income', 'expense'] },
+                  category: { type: 'string' },
+                  date: { type: 'string', format: 'date' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          201: { description: 'Transaction created' },
+          400: { description: 'Validation error' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+      get: {
+        tags: ['Transactions'],
+        summary: 'Get all transactions for current user',
+        responses: {
+          200: { description: 'List of transactions' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/transactions/{id}': {
+      get: {
+        tags: ['Transactions'],
+        summary: 'Get transaction by ID',
+        parameters: [
+          {
+            in: 'path',
+            name: 'id',
+            required: true,
+            schema: { type: 'string' },
+          },
+        ],
+        responses: {
+          200: { description: 'Transaction details' },
+          401: { description: 'Unauthorized' },
+          404: { description: 'Transaction not found' },
+        },
+      },
+      patch: {
+        tags: ['Transactions'],
+        summary: 'Update a transaction (admin only)',
+        parameters: [
+          {
+            in: 'path',
+            name: 'id',
+            required: true,
+            schema: { type: 'string' },
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { type: 'object' },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Transaction updated' },
+          400: { description: 'Validation error' },
+          401: { description: 'Unauthorized' },
+          404: { description: 'Transaction not found' },
+        },
+      },
+      delete: {
+        tags: ['Transactions'],
+        summary: 'Soft delete a transaction (admin only)',
+        parameters: [
+          {
+            in: 'path',
+            name: 'id',
+            required: true,
+            schema: { type: 'string' },
+          },
+        ],
+        responses: {
+          200: { description: 'Transaction deleted' },
+          401: { description: 'Unauthorized' },
+          404: { description: 'Transaction not found' },
+        },
+      },
+    },
+
+    // Role Requests
+    '/role-requests': {
+      post: {
+        tags: ['Role Requests'],
+        summary: 'Create a role change request',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['requestedRole'],
+                properties: {
+                  requestedRole: { type: 'string', enum: ['admin', 'analyst'] },
+                  reason: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          201: { description: 'Role request created' },
+          400: { description: 'Validation error' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+      get: {
+        tags: ['Role Requests'],
+        summary: 'Get all role requests (admin only)',
+        responses: {
+          200: { description: 'List of role requests' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/role-requests/my': {
+      get: {
+        tags: ['Role Requests'],
+        summary: "Get current user's role requests",
+        responses: {
+          200: { description: 'List of own role requests' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/role-requests/{id}/approve': {
+      patch: {
+        tags: ['Role Requests'],
+        summary: 'Approve a role request (admin only)',
+        parameters: [
+          {
+            in: 'path',
+            name: 'id',
+            required: true,
+            schema: { type: 'string' },
+          },
+        ],
+        responses: {
+          200: { description: 'Request approved' },
+          401: { description: 'Unauthorized' },
+          404: { description: 'Request not found' },
+        },
+      },
+    },
+    '/role-requests/{id}/reject': {
+      patch: {
+        tags: ['Role Requests'],
+        summary: 'Reject a role request (admin only)',
+        parameters: [
+          {
+            in: 'path',
+            name: 'id',
+            required: true,
+            schema: { type: 'string' },
+          },
+        ],
+        responses: {
+          200: { description: 'Request rejected' },
+          401: { description: 'Unauthorized' },
+          404: { description: 'Request not found' },
+        },
+      },
+    },
+
+    // Dashboard
+    '/dashboard/summary': {
+      get: {
+        tags: ['Dashboard'],
+        summary: 'Get overall financial summary (analyst only)',
+        responses: {
+          200: { description: 'Summary data' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/dashboard/category-breakdown': {
+      get: {
+        tags: ['Dashboard'],
+        summary: 'Get spending/income breakdown by category',
+        responses: {
+          200: { description: 'Category breakdown data' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/dashboard/monthly-trends': {
+      get: {
+        tags: ['Dashboard'],
+        summary: 'Get monthly transaction trends',
+        responses: {
+          200: { description: 'Monthly trend data' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/dashboard/recent-transactions': {
+      get: {
+        tags: ['Dashboard'],
+        summary: 'Get recent transactions for dashboard',
+        responses: {
+          200: { description: 'Recent transactions list' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+  },
+};
+
+module.exports = swaggerSpec;

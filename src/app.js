@@ -1,6 +1,8 @@
 const express      = require('express')
 const morgan       = require('morgan')
 const cookieParser = require('cookie-parser')
+const swaggerUi    = require('swagger-ui-express')
+const swaggerSpec  = require('./docs/swagger')
 const errorHandler = require('./utils/errorHandler.utils')
 
 const authRoutes = require('./routes/auth.routes')
@@ -14,6 +16,9 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(morgan('dev'))
+
+// Swagger API documentation
+app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 app.get('/', (req, res) => {
     console.log('Root route accessed');

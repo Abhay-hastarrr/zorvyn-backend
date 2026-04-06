@@ -490,3 +490,26 @@ Production deployment would additionally require:
 | In-memory rate limit | Simple zero-dependency setup | Not distributed, resets on restart |
 | Seed script for admin | Secure bootstrap process | Requires manual first run |
 | .env pushed to GitHub | Easy evaluator setup | Security risk in production |
+
+---
+
+## 11. API Documentation (Swagger)
+
+### 11.1 Documentation Approach
+
+API documentation is provided via **Swagger UI** (`swagger-ui-express`) mounted at `/api/api-docs`.
+
+- The OpenAPI 3.0 spec is defined as a plain JavaScript object in `src/docs/swagger.js`.
+- Routes are documented centrally (Auth, Users, Transactions, Dashboard, Role Requests) instead of using inline JSDoc comments in each route file.
+
+**Reason:** Keeping all documentation metadata in a single place avoids cluttering route files with large comment blocks and makes it easier to maintain the spec as the API evolves.
+
+### 11.2 Environment Assumptions
+
+- Swagger UI is primarily intended for local development and evaluation.
+- The docs endpoint is not locked down by auth middleware in this project; in production it should be either disabled or protected (e.g., behind admin-only access or separate developer portal).
+
+### 11.3 Versioning
+
+- The current spec version is `1.0.0` and is not versioned per route.
+- Backwards-incompatible changes would require bumping the spec version and, in a real system, exposing separate versions or a changelog.

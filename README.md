@@ -25,6 +25,7 @@ A Node.js/Express + MongoDB backend for managing users, role requests, and finan
 - bcryptjs
 - cookie-parser
 - morgan
+ - Swagger UI (swagger-ui-express) for API docs
 
 ## Project Structure
 
@@ -98,6 +99,13 @@ npm start
 Server starts at:
 
 - `http://localhost:5000` 
+
+## API Documentation (Swagger)
+
+- Interactive API docs are available at: `http://localhost:5000/api/api-docs`.
+- Documentation is powered by **swagger-ui-express** using an OpenAPI 3.0 spec.
+- The spec is defined centrally in `src/docs/swagger.js` to keep route files clean.
+- All core routes (Auth, Users, Transactions, Dashboard, Role Requests) are documented there.
 
 ## Middleware & Infrastructure
 
